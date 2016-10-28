@@ -70,7 +70,7 @@ namespace GarageUppgift
 
 
 
-        #region Henry
+        
 
         static void Menu()
         {
@@ -150,28 +150,49 @@ namespace GarageUppgift
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Here you add all the different menu option and what happends when you choose them.
+        /// </summary>
+        /// <param name="gar">The current garage you want the changes to apply to.</param>
+
         static void AddToDictionary(Garage<Vehicle> gar)
         {
-
-            Menues.Add(new Dictionary<string, Action<string>>());
-            Menues.Add(new Dictionary<string, Action<string>>());
-            Menues.Add(new Dictionary<string, Action<string>>());
-            Menues.Add(new Dictionary<string, Action<string>>());
+            //The main menu have index 0 in the list.
             Menues.Add(new Dictionary<string, Action<string>>());
 
 
+            //The sub menu "Add vehicle" have index 1 in the list.
+            Menues.Add(new Dictionary<string, Action<string>>());
+
+            //The sub menu "Remove vehicle" have index 2 in the list.
+            Menues.Add(new Dictionary<string, Action<string>>());
+
+            //The sub menu "Load garage" have index 3 in the list.
+            Menues.Add(new Dictionary<string, Action<string>>());
+
+
+            //The sub menu "Search for vehicle" have index 4 in the list.
+            Menues.Add(new Dictionary<string, Action<string>>());
+
+
+
+            //Shows all the vehicles in the active garage.
             Menues[0].Add("Show all vehicles.", (x) => { 
                 Console.Clear(); 
                 Console.WriteLine(gar.ListAllVehicles());
                 Console.ReadKey(); 
                 Console.Clear(); });
 
+
+            //Shows all the vehicle types and the amount of each in the garage.
             Menues[0].Add("Show all vehicle types.", (x) => { 
                 Console.Clear(); 
                 Console.WriteLine(gar.ListAllTypes()); 
                 Console.ReadKey(); 
                 Console.Clear(); });
 
+
+            //Redirecting to sub menu "Add vehicle"
             Menues[0].Add("Add vehicle.", (x) => { Console.Clear(); 
                 menuIndex = 1; 
                 index = 0; 
@@ -179,17 +200,17 @@ namespace GarageUppgift
             
             });
 
-
-            #region Remove Vehicle
-
-
+            //Creating and then redirecting to sub menu "Remove vehicle"
             Menues[0].Add("Remove vehicle.", (x) => {
 
-
+            #region Remove Vehicle
                 string allvehicles = gar.ListAllVehicles();
                 if (allvehicles != "")
                 {
+                    #region Creating sub menu "Remove vehicle"
+
                     Menues[2] = new Dictionary<string, Action<string>>();
+                    
                     foreach (var item in allvehicles.Split('\n'))
                     {
                         string thisVehicle;
@@ -202,7 +223,7 @@ namespace GarageUppgift
 
 
                     }
-
+                    #endregion
 
                     menuIndex = 2;
                     index = 0;
@@ -214,89 +235,33 @@ namespace GarageUppgift
                     Console.ReadKey();
                     Console.Clear();
                 }
-            
-            
-            });
 
             #endregion
 
+            });
+            
 
-            Menues[0].Add("Search for vehicle", (x) => {
+            //Redirecting to sub menu 4.
+            Menues[0].Add("Search for vehicle", (x) =>{
 
+            #region Search for vehicle
                 menuIndex = 4;
                 index = 0;
                 Console.Clear();
 
-                Menues[4].Add("Search by RegNum", (y) => {
-                    Console.WriteLine("What RegNum would you like to search on?");
-                    
-                    string search = gar.SearchByRegNum(Console.ReadLine());
-
-                    if (search != "")
-                        Console.WriteLine(search);
-                    else
-                        Console.WriteLine("There is no vehicle with that reg num in the garage.");
-
-                    Console.ReadKey();
-                    Console.Clear();
-                    index = 0;
-
-                });
-
-                Menues[4].Add("Search by color", (y) =>
-                {
-                    Console.WriteLine("What Color would you like to search on?");
-
-                    string search = gar.SearchByColor(Console.ReadLine());
-
-                    if (search != "")
-                        Console.WriteLine(search);
-                    else
-                        Console.WriteLine("There is no vehicle with that color num in the garage.");
-
-                    Console.ReadKey();
-                    Console.Clear();
-
-                });
 
 
-
-                Menues[4].Add("Search by number of wheels", (y) =>
-                {
-                    Console.WriteLine("What number of wheels would you like to search on?");
-                    string search;
-                    try
-                    {
-                        search = gar.SearchByNumberOfWheels(int.Parse(Console.ReadLine()));
-                    }
-                    catch (Exception)
-                    {
-
-                        search = "";
-                    }
-                    
-
-                    if (search != "")
-                        Console.WriteLine(search);
-                    else
-                        Console.WriteLine("There is no vehicle with that number of wheels in the garage.");
-
-                    Console.ReadKey();
-                    Console.Clear();
-
-                });
-
-
-
-
-
-
+            #endregion
             });
 
+            
+
+
+            //Creates a textfile corresponding to your new garage and adds it to the textfile containing all the existing garages.
+            Menues[0].Add("Create new Garage:", (x) =>{
 
             #region Create Garage
 
-            Menues[0].Add("Create new Garage:", (x) => {
                 string FileName = @"C:\Users\elev\Documents\Visual Studio 2013\Garages.txt";
 
 
@@ -343,7 +308,6 @@ namespace GarageUppgift
                         write.Close();
                         appendWrite.Close();
                         FileStream temp = new FileStream(@"C:\Users\elev\Documents\Visual Studio 2013\" + newgarage + ".txt", FileMode.Create);
-                        //File.Create(@"C:\Users\elev\Documents\Visual Studio 2013\" + newgarage + ".txt");
                         temp.Close();
 
                         Console.WriteLine("You need to restart your application before your new garage is avalible.\nIt is currently in construction!");
@@ -365,18 +329,19 @@ namespace GarageUppgift
 
                 Console.Clear();
 
-            
-            
-            });
             #endregion
+            });
+            
 
-
-
-            #region Load Garage
+            //Creates and redirects to the sub menu "Load Garage"
             Menues[0].Add("Load Garage", (x) => {
+
+                #region Load Garage
 
                 string FileName = @"C:\Users\elev\Documents\Visual Studio 2013\Garages.txt";
                 string[] Garages = System.IO.File.ReadAllLines(FileName);
+
+                #region Creating sub menu "Load Garage"
                 Menues[3] = new Dictionary<string, Action<string>>();
 
                 foreach (var item in Garages)
@@ -408,29 +373,26 @@ namespace GarageUppgift
                     }
                 }
 
+                #endregion
+
                 menuIndex = 3;
                 index = 0;
                 Console.Clear();
                 Console.WriteLine("Coose what garage to load. \n");
 
 
-
+            #endregion
             });
 
 
-            #endregion
-
-
             Menues[0].Add("Exit application\n\n", (x) => { Environment.Exit(0); });
-
-
-
-            
-            #region Menu Car
-
+            //Creates sub menu "Add vehicle"
+            #region Creatig sub menu "Add vehicle"
 
             Menues[1].Add("Car", (x) => { 
-                
+
+                #region Menu Car
+
                 int NumberOfWheels = 0; 
                 string Color;
                 string RegNumber; 
@@ -507,16 +469,16 @@ namespace GarageUppgift
 
 
 
-            
-            
+            #endregion
             });
 
-#endregion
 
-            #region Menu Airplane
 
+            
 
             Menues[1].Add("Airplane", (x) => {
+
+                #region Menu Airplane
 
                 int NumberOfWheels = 0;
                 string Color;
@@ -599,16 +561,16 @@ namespace GarageUppgift
                 menuIndex = 0;
                 index = 0;
             
-            
+            #endregion
             });
 
-#endregion
 
-            #region Menu Motorcycle
+
+            
 
             Menues[1].Add("Motorcycle", (x) => {
 
-
+                #region Menu Motorcycle
 
                 int NumberOfWheels = 0;
                 string Color;
@@ -680,17 +642,17 @@ namespace GarageUppgift
 
             
             
-            
-            
+            #endregion
             });
 
 
-            #endregion
+            
 
-            #region Menu Buss
+            
 
             Menues[1].Add("Buss", (x) => {
 
+                #region Menu Buss
 
                 int NumberOfWheels = 0;
                 string Color;
@@ -763,16 +725,16 @@ namespace GarageUppgift
                 index = 0;
 
             
-            
-            
+            #endregion
             });
 
-            #endregion
+            
 
-            #region Menu Boat
+            
 
             Menues[1].Add("Boat\n\n\n", (x) => {
 
+                #region Menu Boat
 
                 int NumberOfWheels = 0;
                 string Color;
@@ -856,28 +818,93 @@ namespace GarageUppgift
                 index = 0;
 
             
-            
+            #endregion
             });
 
             #endregion
 
+
+            //Creates sub menu "Search vehicle"
+            #region Creating sub menu "Search vehicle"
+
+            Menues[4].Add("Search by RegNum", (y) =>
+            {
+
+                #region Search by RegNum
+
+                Console.WriteLine("What RegNum would you like to search on?");
+
+                string search = gar.SearchByRegNum(Console.ReadLine());
+
+                if (search != "")
+                    Console.WriteLine(search);
+                else
+                    Console.WriteLine("There is no vehicle with that reg num in the garage.");
+
+                Console.ReadKey();
+                Console.Clear();
+                index = 0;
+
+                #endregion
+            });
+
+
+            Menues[4].Add("Search by color", (y) =>
+            {
+
+                #region Search by color
+
+                Console.WriteLine("What Color would you like to search on?");
+
+                string search = gar.SearchByColor(Console.ReadLine());
+
+                if (search != "")
+                    Console.WriteLine(search);
+                else
+                    Console.WriteLine("There is no vehicle with that color num in the garage.");
+
+                Console.ReadKey();
+                Console.Clear();
+
+                #endregion
+            });
+
+
+
+            Menues[4].Add("Search by number of wheels", (y) =>
+            {
+
+                #region Search by number of wheels
+                Console.WriteLine("What number of wheels would you like to search on?");
+                string search;
+                try
+                {
+                    search = gar.SearchByNumberOfWheels(int.Parse(Console.ReadLine()));
+                }
+                catch (Exception)
+                {
+
+                    search = "";
+                }
+
+
+                if (search != "")
+                    Console.WriteLine(search);
+                else
+                    Console.WriteLine("There is no vehicle with that number of wheels in the garage.");
+
+                Console.ReadKey();
+                Console.Clear();
+                #endregion
+            });
+
+            #endregion
+
+
         }
         
 
-        #endregion
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
 
 
 
